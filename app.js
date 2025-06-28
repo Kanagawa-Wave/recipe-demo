@@ -19,6 +19,24 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.get('/', async (req, res) => {
+  const ingredient = req.query.ingredient?.trim() || 'chicken_breast';
+
+  let meals = [];
+  try {
+    const url      = `https://www.themealdb.com/api/json/v1/1/filter.php?i=${encodeURIComponent(ingredient)}`;
+    const response = await fetch(url);
+    const json     = await response.json();
+    meals          = json.meals || [];
+  } catch (err) {
+    console.error('MealDB fetch error:', err);
+  }
+
+  console.log('Ingredient:', ingredient);
+
+  res.render('index', { ingredient, meals });
+});
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
