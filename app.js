@@ -32,8 +32,6 @@ app.get('/', async (req, res) => {
     console.error('MealDB fetch error:', err);
   }
 
-  console.log('Ingredient:', ingredient);
-
   res.render('index', { ingredient, meals });
 });
 
